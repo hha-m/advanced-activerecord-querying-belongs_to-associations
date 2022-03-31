@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryGirl.define do
   sequence :name do |value|
     "name#{value}sequence"

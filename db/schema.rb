@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateSchema < ActiveRecord::Migration
   def self.up
     create_table :people, force: true do |table|

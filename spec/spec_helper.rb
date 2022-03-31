@@ -1,20 +1,22 @@
-require "active_record"
-require "database_cleaner"
-require "factory_girl"
+# frozen_string_literal: true
 
-Dir.glob(File.expand_path("../../app/models/*.rb", __FILE__)) do |model|
+require 'active_record'
+require 'database_cleaner'
+require 'factory_girl'
+
+Dir.glob(File.expand_path('../app/models/*.rb', __dir__)).sort.each do |model|
   require model
 end
 
-require_relative "factories"
-require_relative "../db/schema"
+require_relative 'factories'
+require_relative '../db/schema'
 
 ActiveRecord::Base.establish_connection(
-  adapter:  "postgresql",
-  database: "upcase_exercise",
-  encoding: "utf8",
-  host: "localhost",
-  min_messages: "warning"
+  adapter: 'postgresql',
+  database: 'upcase_exercise',
+  encoding: 'utf8',
+  host: 'localhost',
+  min_messages: 'warning'
 )
 
 CreateSchema.suppress_messages { CreateSchema.migrate(:up) }

@@ -5,11 +5,15 @@ class Location < ActiveRecord::Base
   has_many :people
 
   scope :alphabetically_by_region, lambda {
-    joins(:region).merge(Region.alphabetical_order).order(:name)
+    joins(:region).merge(Region.alphabetical_order).order_by_name
   }
 
-  # NOTE: https://stackoverflow.com/questions/27106853/rails-pgundefinedtable-error-missing-from-clause-entry-for-table
-  def self.in_region(region_name)
-    joins(:region).preload(:region).where(regions: { name: region_name })
+  scope :order_by_name, -> { order(:name) }
+
+  class << self
+    # NOTE: https://stackoverflow.com/questions/27106853/rails-pgundefinedtable-error-missing-from-clause-entry-for-table
+    def in_region(region_name)
+      joins(:region).preload(:region).where(regions: { name: region_name })
+    end
   end
 end

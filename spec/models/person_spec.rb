@@ -51,4 +51,48 @@ describe Person do
                                        ])
     end
   end
+
+  describe '.with_employees' do
+    it 'finds people who manage employees' do
+      managers = [
+        create(:person, name: 'manager-one'),
+        create(:person, name: 'manager-two')
+      ]
+      managers.each do |manager|
+        2.times do
+          create(:person, name: "employee-of-#{manager.name}", manager: manager)
+        end
+      end
+
+      result = Person.with_employees
+
+      expect(result.map(&:name)).to match_array(%w[manager-one manager-two])
+    end
+  end
+
+  describe '.with_employees_order_by_location_name' do
+    it 'finds managers ordered by location name' do
+      locations = [
+        create(:location, name: 'location1'),
+        create(:location, name: 'location3'),
+        create(:location, name: 'location2')
+      ]
+      managers = locations.map do |location|
+        create(:person, name: "manager-at-#{location.name}", location: location)
+      end
+      managers.each do |manager|
+        2.times do
+          create(:person, name: "employee-of-#{manager.name}", manager: manager)
+        end
+      end
+
+      result = Person.with_employees_order_by_location_name
+
+      expect(result.map(&:name)).to eq(%w[
+                                         manager-at-location1
+                                         manager-at-location2
+                                         manager-at-location3
+                                       ])
+    end
+  end
 end
